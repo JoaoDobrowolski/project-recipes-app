@@ -63,7 +63,7 @@ class Login extends React.Component {
 
   send = () => {
     const { email } = this.state;
-    window.localStorage.setItem('user{ email}', email);
+    window.localStorage.setItem('user', JSON.stringify({ email }));
     window.localStorage.setItem('mealsToken', 1);
     window.localStorage.setItem('cocktailsToken', 1);
     const { /* sendEmail */ history } = this.props;

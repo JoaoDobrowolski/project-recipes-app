@@ -4,7 +4,7 @@ import Header from '../componentes/Header';
 function DoneRecipes() {
   return (
     <div>
-      <Header value="Done Recipes" search={ false } />
+      <Header page="Done Recipes" search={ false } />
     </div>
   );
 }

@@ -4,7 +4,7 @@ import Header from '../componentes/Header';
 function Foods() {
   return (
     <div>
-      <Header value={ Foods } />
+      <Header page="Foods" />
     </div>
   );
 }

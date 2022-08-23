@@ -1,12 +1,19 @@
-import React from 'react';
-import Footer from '../componentes/Footer';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import Footer from '../componentes/Footer';
 import Header from '../componentes/Header';
 
 function Profile() {
-  const { email } = JSON.parse(localStorage.getItem('user'));
-
   const history = useHistory();
+
+  const [emailStorage, setEmailStorage] = useState('email@example.com');
+
+  useEffect(() => {
+    if (localStorage.getItem('user')) {
+      const { email } = JSON.parse(localStorage.getItem('user'));
+      setEmailStorage(email);
+    }
+  }, []);
 
   const handleClick = () => {
     localStorage.clear();
@@ -18,7 +25,7 @@ function Profile() {
       <Header page="Profile" search={ false } />
 
       <div>
-        <h2 data-testid="profile-email">{ email }</h2>
+        <h2 data-testid="profile-email">{ emailStorage }</h2>
         <button
           type="button"
           data-testid="profile-done-btn"
@@ -40,11 +47,9 @@ function Profile() {
           onClick={ handleClick }
         >
           Logout
-
         </button>
-        
       </div>
-    <Footer />
+      <Footer />
     </div>
   );
 }

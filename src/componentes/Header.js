@@ -22,11 +22,13 @@ function Header({ page, search }) {
         <button
           onClick={ () => handleClickProfile() }
           type="button"
+          data-testid="btn-profile"
         >
           <img
             src={ iconProfile }
             alt="icon-profile"
             data-testid="profile-top-btn"
+
           />
         </button>
         { search && (

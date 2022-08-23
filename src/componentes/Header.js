@@ -37,9 +37,9 @@ function Header({ page, search }) {
             ) }
           >
             <img
+              data-testid="search-top-btn"
               src={ iconSearch }
               alt="icon-search"
-              data-testid="search-top-btn"
             />
           </button>) }
 

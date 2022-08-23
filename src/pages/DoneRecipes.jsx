@@ -5,6 +5,7 @@ function DoneRecipes() {
   return (
     <div>
       <Header page="Done Recipes" search={ false } />
+      <h1>Componentes com refeitas realizadas!</h1>
     </div>
   );
 }

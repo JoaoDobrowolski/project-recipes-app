@@ -7,7 +7,7 @@ import renderWithRouter from './renderWithRouter';
 import App from '../App';
 
 describe('Testes para o componente de login', () => {
-    it('Testes para verificar se há inpus na tela', () => {
+    it('Testes para verificar se há inputs na tela', () => {
         render(
             <Login />
         )

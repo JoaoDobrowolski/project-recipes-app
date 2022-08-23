@@ -1,4 +1,5 @@
 import React from 'react';
+import Footer from '../componentes/Footer';
 import { useHistory } from 'react-router-dom';
 import Header from '../componentes/Header';
 
@@ -15,6 +16,7 @@ function Profile() {
   return (
     <div>
       <Header page="Profile" search={ false } />
+
       <div>
         <h2 data-testid="profile-email">{ email }</h2>
         <button
@@ -40,7 +42,9 @@ function Profile() {
           Logout
 
         </button>
+        
       </div>
+    <Footer />
     </div>
   );
 }

@@ -22,13 +22,13 @@ function App() {
         <Route exact path="/" component={ Login } />
         <Route exact path="/foods" component={ Foods } />
         <Route
-          path="/foods/:id-da-receita"
+          path="/foods/:id"
           render={ (props) => <FoodsId { ...props } /> }
         />
         <Route path="/foods/:id-da-receita/in-progress" component={ FoodsInProgress } />
         <Route exact path="/drinks" component={ Drinks } />
-        <Route path="/drinks/:id-da-receita" component={ DrinksId } />
-        <Route path="/drinks/:id-da-receita/in-progress" component={ DrinksInProgress } />
+        <Route path="/drinks/:id" component={ DrinksId } />
+        <Route path="/drinks/:id" component={ DrinksInProgress } />
         <Route path="/profile" component={ Profile } />
         <Route path="/done-recipes" component={ DoneRecipes } />
         <Route path="/favorite-recipes" component={ FavoriteRecipes } />

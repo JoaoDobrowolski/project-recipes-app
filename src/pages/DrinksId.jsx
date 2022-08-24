@@ -1,8 +1,11 @@
 import React from 'react';
+import RecipeDetails from '../componentes/RecipeDetails';
 
 function DrinksId() {
   return (
-    <div>Drinks Id</div>
+    <div>
+      <RecipeDetails />
+    </div>
   );
 }
 

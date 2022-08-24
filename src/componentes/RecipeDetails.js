@@ -1,27 +1,39 @@
 import React, { useContext, useEffect } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 import RecipeAppContext from '../context/RecipeAppContext';
 
-function RecipeDetails() {
-  const { recipesDetails, id, setRecipesDetails } = useContext(RecipeAppContext);
-  // const [recipies, setRecipies] = useState();
+function RecipeDetails(props) {
+  const { recipesDetails,
+    // id,
+    setRecipesDetails } = useContext(RecipeAppContext);
+  const { id } = useParams();
+  const location = useLocation();
+  const { pathname } = location;
 
   const fetchRecipie = async () => {
-    const urlMeals = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
-    const response = await fetch(urlMeals);
-    const json = await response.json();
-    setRecipesDetails(json);
+    const foodOrDrink = pathname.split('/');
+    if (foodOrDrink[1] === 'foods') {
+      const urlMeals = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
+      const response = await fetch(urlMeals);
+      const json = await response.json();
+      return setRecipesDetails(json);
+    }
+    if (foodOrDrink[1] === 'drinks') {
+      const urlDrinks = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
+      console.log('if drinks');
+      const response = await fetch(urlDrinks);
+      const json = await response.json();
+      return setRecipesDetails(json);
+    }
   };
 
-  useEffect(() => {
-    fetchRecipie();
-  }, [id]);
+  useEffect(async () => {
+    await fetchRecipie();
+  }, []);
 
   return (
     <div>
-      {
-        recipesDetails ? <h1>Loading...</h1> : console.log(recipesDetails)
-      }
-
+      <h1>Renderizar o details</h1>
     </div>
   );
 }

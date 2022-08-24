@@ -1,9 +1,11 @@
 import React, { useContext } from 'react';
-import { Redirect, useHistory } from 'react-router-dom';
+import { Redirect, useHistory, useLocation } from 'react-router-dom';
 import RecipeAppContext from '../context/RecipeAppContext';
 
 function Recipes() {
   const history = useHistory();
+  const location = useLocation();
+  const { pathname } = location;
 
   const doze = 12; // magic numbers
 
@@ -17,31 +19,12 @@ function Recipes() {
     return keyObj;
   };
 
-  const click = (id) => {
-    setId(id);
-    console.log(mealOrDrink);
-    /* const urlMeals = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
-    const urlDrinks = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`; */
+  const click = async (id) => {
+    console.log(pathname);
     if (mealOrDrink === 'meal') {
-      history.push(`/foods/${id}`);
-      // return json;
-      // console.log(json);
+      return history.push(`/foods/${id}`);
     }
-    /* const response = await fetch(urlDrinks);
-    const json = await response.json();
-    setRecipesDetails(json); */
-    history.push(`/drinks/${id}`);
-    // return json;
-    // console.log(json);
-
-    /* setIdRecipe(id);
-    console.log(idRecipe);
- */
-    /* const infoId = () => {
-      if (mealOrDrink === 'meal') {
-        return (urlMeals);
-      } return (urlDrinks);
-    }; */
+    return history.push(`/drinks/${id}`);
   };
 
   return (
@@ -91,6 +74,7 @@ function Recipes() {
             </div>
           ))
         ) }
+      {/* <RecipeDetails /> */}
     </div>
   );
 }

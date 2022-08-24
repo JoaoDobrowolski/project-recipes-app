@@ -21,7 +21,10 @@ function App() {
       <Switch>
         <Route exact path="/" component={ Login } />
         <Route exact path="/foods" component={ Foods } />
-        <Route path="/foods/:id-da-receita" componet={ FoodsId } />
+        <Route
+          path="/foods/:id-da-receita"
+          render={ (props) => <FoodsId { ...props } /> }
+        />
         <Route path="/foods/:id-da-receita/in-progress" component={ FoodsInProgress } />
         <Route exact path="/drinks" component={ Drinks } />
         <Route path="/drinks/:id-da-receita" component={ DrinksId } />

@@ -1,8 +1,12 @@
 import React from 'react';
+import RecipeDetails from '../componentes/RecipeDetails';
 
 function FoodsId() {
   return (
-    <div>Foods Id</div>
+    <div>
+      <RecipeDetails />
+      <h1>Página para cada receita específica</h1>
+    </div>
   );
 }
 

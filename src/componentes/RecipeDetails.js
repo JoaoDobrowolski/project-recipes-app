@@ -2,10 +2,8 @@ import React, { useContext, useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import RecipeAppContext from '../context/RecipeAppContext';
 
-function RecipeDetails(props) {
-  const { recipesDetails,
-    // id,
-    setRecipesDetails } = useContext(RecipeAppContext);
+function RecipeDetails() {
+  const { setRecipesDetails } = useContext(RecipeAppContext);
   const { id } = useParams();
   const location = useLocation();
   const { pathname } = location;

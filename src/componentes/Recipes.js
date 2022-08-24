@@ -1,60 +1,127 @@
-import React, { useContext } from 'react';
-import { Redirect } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { Link, Redirect } from 'react-router-dom';
 import RecipeAppContext from '../context/RecipeAppContext';
 
 function Recipes() {
   const doze = 12; // magic numbers
 
-  const { returnAPI, mealOrDrink } = useContext(RecipeAppContext);
+  const { returnAPI, mealOrDrink, category, setReturnAPI,
+    doRedirect, setDoRedirect } = useContext(RecipeAppContext);
+
+  const [buttonToggle, setButtonToggle] = useState(false);
+  // const [selectCategory, setSelectCategory] = useState('');
 
   const handleKeyObj = (str) => { // função feita para lidar com o nome da chave do obj retornado da api
     const keyObj = `${str + mealOrDrink.charAt(0).toUpperCase() + mealOrDrink.slice(1)}`;
     return keyObj;
   };
+
+  const getCategories = async (endpoint) => { // requisição à API com o endpoint como parâmetro
+    const response = await fetch(endpoint);
+    // console.log(endpoint);
+    const json = await response.json();
+    setDoRedirect(false); // não irá redirecionar para a tela de detalhes da receita caso apareça apenas uma ao clicar em alguma categoria
+    return json;
+  };
+
+  const filterReset = async () => { // função que "reseta" os filtros fazendo a chamada à api como se não houvesse filtro escolhido
+    if (mealOrDrink === 'meal') {
+      const url = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
+      return setReturnAPI(await getCategories(url));
+    }
+    const url = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=';
+    setReturnAPI(await getCategories(url));
+  };
+
+  const filterCategory = async (categ) => { // função que escolhe a url correta com a categoria correta para realizar o fetch
+    setButtonToggle(!buttonToggle);
+
+    if (buttonToggle) {
+      return filterReset();
+    }
+
+    if (mealOrDrink === 'meal') {
+      const url = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${categ}`;
+      return setReturnAPI(await getCategories(url));
+    }
+    const url = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${categ}`;
+    setReturnAPI(await getCategories(url));
+  };
+
   return (
     <div>
-      { (returnAPI && returnAPI[`${mealOrDrink}s`] !== null) // caso tenha apenas 1 receita, redirecionar para a pagina de detalhes dela
+      <div>
+        { category !== '' // caso category não seja uma string vazia, irá realizar o map dos botões das categorias
+          && (
+            category.map((cat) => (
+              <button
+                key={ cat.strCategory }
+                type="button"
+                data-testid={ `${cat.strCategory}-category-filter` }
+                onClick={ () => filterCategory(cat.strCategory) }
+              >
+                { cat.strCategory }
+              </button>
+            ))) }
+
+        <button // botão de resetar os filtros
+          data-testid="All-category-filter"
+          type="button"
+          onClick={ filterReset }
+        >
+          All
+        </button>
+
+      </div>
+
+      {
+        (returnAPI && returnAPI[`${mealOrDrink}s`] !== null && doRedirect) // caso tenha apenas 1 receita, redirecionar para a pagina de detalhes dela
         && (
           (mealOrDrink === 'meal')
-            ? (
-              (returnAPI.meals.length === 1)
-              && (
-                <Redirect
-                  to={
-                    `/foods/${returnAPI[`${mealOrDrink}s`][0][handleKeyObj('id')]}` // Rota provisória
-                  }
-                />
-              )
+          && (
+            (returnAPI[`${mealOrDrink}s`].length === 1)
+            && (
+              <Redirect
+                to={ mealOrDrink === 'meal'
+                  ? (
+                    `/foods/${returnAPI[`${mealOrDrink}s`][0][handleKeyObj('id')]}`
+                  )
+                  : (
+                    `/drinks/${returnAPI[`${mealOrDrink}s`][0][handleKeyObj('id')]}`) }
+              />
             )
-            : (
-              (returnAPI.drinks.length === 1)
-              && (
-                <Redirect
-                  to={
-                    `/drinks/${returnAPI[`${mealOrDrink}s`][0][handleKeyObj('id')]}` // Rota provisória
-                  }
-                />
-              )
-            )
+          )
+        )
+      }
 
-        ) }
-
-      { (returnAPI && returnAPI[`${mealOrDrink}s`] !== null) // caso tenha múltiplas receitas
+      {
+        (returnAPI && returnAPI[`${mealOrDrink}s`] !== null) // caso tenha múltiplas receitas
         && (
           (returnAPI[`${mealOrDrink}s`]).slice(0, doze).map((recipe, i) => (
-            <div key={ recipe[handleKeyObj('id')] } data-testid={ `${i}-recipe-card` }>
-              <img
-                data-testid={ `${i}-card-img` }
-                style={ { width: '100px' } } // provisório
-                src={ recipe[`${handleKeyObj('str')}Thumb`] }
-                alt={ recipe[handleKeyObj('str')] }
-              />
-              <p data-testid={ `${i}-card-name` }>
-                { recipe[handleKeyObj('str')] }
-              </p>
-            </div>
+            <Link
+              key={ recipe[handleKeyObj('id')] }
+              to={ mealOrDrink === 'meal'
+                ? (
+                  `/foods/${returnAPI[`${mealOrDrink}s`][0][handleKeyObj('id')]}`
+                )
+                : (
+                  `/drinks/${returnAPI[`${mealOrDrink}s`][0][handleKeyObj('id')]}`) }
+            >
+              <div data-testid={ `${i}-recipe-card` }>
+                <img
+                  data-testid={ `${i}-card-img` }
+                  style={ { width: '100px' } } // provisório
+                  src={ recipe[`${handleKeyObj('str')}Thumb`] }
+                  alt={ recipe[handleKeyObj('str')] }
+                />
+                <p data-testid={ `${i}-card-name` }>
+                  { recipe[handleKeyObj('str')] }
+                </p>
+              </div>
+            </Link>
           ))
-        ) }
+        )
+      }
     </div>
   );
 }

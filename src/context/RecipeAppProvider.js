@@ -6,6 +6,8 @@ function RecipeAppProvider({ children }) {
   const [returnAPI, setReturnAPI] = useState(''); // nos dá o retorno da API (atualiza conforme o botão de busca (do componente SearchBar) é clicado)
   const [mealOrDrink, setMealOrDrink] = useState('meal'); // info de ser meal ou cocktail deverá vir do Footer e será encaminhada para o SearchBar
   const [searchBarVisible, setSearchBarVisible] = useState(false);
+  const [category, setCategory] = useState('');
+  const [doRedirect, setDoRedirect] = useState(true);
 
   const contextValue = {
     returnAPI,
@@ -14,6 +16,10 @@ function RecipeAppProvider({ children }) {
     setMealOrDrink,
     searchBarVisible,
     setSearchBarVisible,
+    category,
+    setCategory,
+    doRedirect,
+    setDoRedirect,
   };
 
   return (

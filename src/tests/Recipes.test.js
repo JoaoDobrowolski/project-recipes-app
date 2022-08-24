@@ -4,33 +4,19 @@ import React from 'react';
 import App from '../App';
 import RecipeAppProvider from '../context/RecipeAppProvider';
 import renderWithRouter from './renderWithRouter';
-import chickenMeals from './mockData/chikenMeals'
-import soupMeals from './mockData/soupMeals'
-import drinks from './mockData/drinks'
+import ginDrinks from '../../cypress/mocks/ginDrinks';
+import chickenMeals from '../../cypress/mocks/chickenMeals';
+import { meals } from '../../cypress/mocks/meals';
 
 describe('Teste o componente Recipes', () => {
-  // beforeEach(() => {
-  //   jest.spyOn(global, 'fetch').mockImplementation(() => Promise.resolve({
-  //     json: () => Promise.resolve(mockAllData),
-  //   }));
-  // });
-  // console.log(mockAllData)
 
-
-  afterEach(() => jest.clearAllMocks());
-
-  test('Teste a busca por ingredientes',async () => {
+  test('Se o radio selecionado for Ingredient, a busca na API é feita corretamente pelo ingrediente',async () => {
     const { history } = renderWithRouter(<RecipeAppProvider><App /></RecipeAppProvider>)
     history.push('/foods')
 
-    // console.log(mockAllData)
-
-
-  jest.spyOn(global, 'fetch').mockImplementationOnce(() => Promise.resolve({
+  const mockData = jest.spyOn(global, 'fetch').mockImplementationOnce(() => Promise.resolve({
     json: () => Promise.resolve(chickenMeals),
   }))
-
-  // console.log(chickenMeals)
 
         const searchIcon = screen.getByTestId('search-top-btn')
         userEvent.click(searchIcon)
@@ -53,20 +39,17 @@ describe('Teste o componente Recipes', () => {
 
         await waitFor(() => expect(global.fetch).toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/filter.php?i=chicken'))
 
-        // screen.logTestingPlaygroundURL()
+        mockData.mockRestore()
   }),
 
-  test('Teste a busca por nome',async () => {
+  test('Se o radio selecionado for Name, a busca na API é feita corretamente pelo nome',async () => {
     const { history } = renderWithRouter(<RecipeAppProvider><App /></RecipeAppProvider>)
     history.push('/foods')
 
-    const {meals} = soupMeals
 
-jest.spyOn(global, 'fetch').mockImplementationOnce(() => Promise.resolve({
-  json: () => Promise.resolve(meals),
-}))
-
-console.log('soup meals', meals)
+    const mockData = jest.spyOn(global, 'fetch').mockImplementationOnce(() => Promise.resolve({
+      json: () => Promise.resolve(meals),
+    }))
 
         const searchIcon = screen.getByTestId('search-top-btn')
         userEvent.click(searchIcon)
@@ -89,15 +72,16 @@ console.log('soup meals', meals)
 
         await waitFor(() => expect(global.fetch).toHaveBeenCalled());
 
-        await waitFor(() => expect(global.fetch).toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/search.php?s=soup'))
-
+        await waitFor(() => expect(global.fetch)
+        .toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/search.php?s=soup'))
+        mockData.mockRestore()
   }),
 
-  test('Teste a busca por ingredientes',async () => {
+  test('Na tela de bebidas, se o radio selecionado for Ingredient, a busca na API é feita corretamente pelo ingrediente',async () => {
     const { history } = renderWithRouter(<RecipeAppProvider><App /></RecipeAppProvider>)
     history.push('/drinks')
 
-    jest.spyOn(global, 'fetch').mockImplementationOnce(() => Promise.resolve({
+    const mockData = jest.spyOn(global, 'fetch').mockImplementationOnce(() => Promise.resolve({
     json: () => Promise.resolve(drinks),
     }))
 
@@ -120,8 +104,44 @@ console.log('soup meals', meals)
 
         await waitFor(() => expect(global.fetch).toHaveBeenCalled());
 
-        await waitFor(() => expect(global.fetch).toHaveBeenCalledWith('https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=lemon'))
+        await waitFor(() => expect(global.fetch)
+        .toHaveBeenCalledWith('https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=lemon'))
 
-        // screen.logTestingPlaygroundURL()
+        mockData.mockRestore()
+  }),
+
+  test('Na tela de bebidas, se o radio selecionado for Name, a busca na API é feita corretamente pelo nome',async () => {
+    const { history } = renderWithRouter(<RecipeAppProvider><App /></RecipeAppProvider>)
+    history.push('/drinks')
+
+    const mockData = jest.spyOn(global, 'fetch').mockImplementationOnce(() => Promise.resolve({
+    json: () => Promise.resolve(ginDrinks),
+    }))
+
+        const searchIcon = screen.getByTestId('search-top-btn')
+        userEvent.click(searchIcon)
+
+        const inputSearch = screen.getByTestId('search-input')
+
+        userEvent.type(inputSearch, 'gin')
+
+        const searchButton = screen.getByRole('button', {
+            name: /buscar/i
+          })
+
+          const radioName = screen.getByTestId('name-search-radio')
+        
+          userEvent.click(radioName)
+
+        userEvent.click(searchButton)
+
+        await waitFor(() => expect(global.fetch).toHaveBeenCalled());
+
+        await waitFor(() => expect(global.fetch)
+        .toHaveBeenCalledWith('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=gin'))
+
+        mockData.mockRestore()
   })
+
+
 })

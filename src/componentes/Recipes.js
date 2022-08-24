@@ -10,9 +10,7 @@ function Recipes() {
   const doze = 12; // magic numbers
 
   const {
-    returnAPI, mealOrDrink, setId } = useContext(RecipeAppContext);
-  console.log(returnAPI);
-  // console.log(mealOrDrink.charAt(0).toUpperCase(), mealOrDrink.slice(1));
+    returnAPI, mealOrDrink } = useContext(RecipeAppContext);
 
   const handleKeyObj = (str) => { // função feita para lidar com o nome da chave do obj retornado da api
     const keyObj = `${str + mealOrDrink.charAt(0).toUpperCase() + mealOrDrink.slice(1)}`;

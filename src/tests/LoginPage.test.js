@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import renderWithRouter from './renderWithRouter';
 import App from '../App';
+import RecipeAppProvider from '../context/RecipeAppProvider';
 
 describe('Testes para o componente de login', () => {
     it('Testes para verificar se há inputs na tela', () => {
@@ -37,7 +38,7 @@ describe('Testes para o componente de login', () => {
     }),
 
     it('Teste com o clique no Enter', async() => {
-       const { history } = renderWithRouter(<App />)
+       const { history } = renderWithRouter(<RecipeAppProvider><App /></RecipeAppProvider>)
 
         const email = screen.getByTestId('email-input')
         const senha = screen.getByTestId('password-input')
@@ -49,7 +50,7 @@ describe('Testes para o componente de login', () => {
         screen.logTestingPlaygroundURL()
 
 
-        const text = screen.getByText('Componente de receitas')
+        const text = screen.getByText('Foods')
 
         expect(text).toBeDefined()
 

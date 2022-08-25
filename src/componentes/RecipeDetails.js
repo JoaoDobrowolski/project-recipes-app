@@ -44,7 +44,7 @@ function RecipeDetails() {
 
   return (
     <div>
-      {/* {
+      {/*{
         detailsMeal.length === 0 ? (
           <p>Loading</p>
         ) : (

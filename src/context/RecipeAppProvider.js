@@ -7,8 +7,8 @@ function RecipeAppProvider({ children }) {
   const [mealOrDrink, setMealOrDrink] = useState('meal'); // info de ser meal ou cocktail deverá vir do Footer e será encaminhada para o SearchBar
   const [searchBarVisible, setSearchBarVisible] = useState(false);
   // estado com o id de cada receita
-  const [recipesDetails, setRecipesDetails] = useState('');
-  const [id, setId] = useState('');
+  const [detailsMeal, setDetailsMeal] = useState('');
+  const [detailsDrink, setDetailsDrink] = useState('');
 
   const contextValue = {
     returnAPI,
@@ -17,10 +17,10 @@ function RecipeAppProvider({ children }) {
     setMealOrDrink,
     searchBarVisible,
     setSearchBarVisible,
-    recipesDetails,
-    setRecipesDetails,
-    id,
-    setId,
+    detailsMeal,
+    setDetailsMeal,
+    detailsDrink,
+    setDetailsDrink,
   };
 
   return (

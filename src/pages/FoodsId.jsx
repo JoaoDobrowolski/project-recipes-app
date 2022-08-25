@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import RecipeDetails from '../componentes/RecipeDetails';
 import RecipeAppContext from '../context/RecipeAppContext';
 
@@ -6,6 +6,17 @@ function FoodsId() {
   const {
     detailsMeal,
   } = useContext(RecipeAppContext);
+
+  const fetchRecommended = async () => {
+    const response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
+    const json = await response.json();
+    console.log(json);
+  };
+
+  useEffect(async () => {
+    await fetchRecommended();
+  }, []);
+
   return (
     <div>
       <RecipeDetails />

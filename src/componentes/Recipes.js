@@ -87,19 +87,16 @@ function Recipes() {
       {
         (returnAPI && returnAPI[`${mealOrDrink}s`] !== null && doRedirect) // caso tenha apenas 1 receita, redirecionar para a pagina de detalhes dela
         && (
-          (mealOrDrink === 'meal')
+          (returnAPI[`${mealOrDrink}s`].length === 1)
           && (
-            (returnAPI[`${mealOrDrink}s`].length === 1)
-            && (
-              <Redirect
-                to={ mealOrDrink === 'meal'
-                  ? (
-                    `/foods/${returnAPI[`${mealOrDrink}s`][0][handleKeyObj('id')]}`
-                  )
-                  : (
-                    `/drinks/${returnAPI[`${mealOrDrink}s`][0][handleKeyObj('id')]}`) }
-              />
-            )
+            <Redirect
+              to={ mealOrDrink === 'meal'
+                ? (
+                  `/foods/${returnAPI[`${mealOrDrink}s`][0][handleKeyObj('id')]}`
+                )
+                : (
+                  `/drinks/${returnAPI[`${mealOrDrink}s`][0][handleKeyObj('id')]}`) }
+            />
           )
         )
       }

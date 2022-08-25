@@ -19,3 +19,7 @@ function Drinks() {
 }
 
 export default Drinks;
+
+/*
+Se for um único drink, renderiza o header, o drink e o footer
+*/

@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import RecipeDetails from '../componentes/RecipeDetails';
 import RecipeAppContext from '../context/RecipeAppContext';
 
 function FoodsId() {
@@ -7,6 +8,7 @@ function FoodsId() {
   } = useContext(RecipeAppContext);
   return (
     <div>
+      <RecipeDetails />
       <h1>Renderizar o details</h1>
       {
         detailsMeal.length === 0 ? (
@@ -170,3 +172,16 @@ function FoodsId() {
 }
 
 export default FoodsId;
+
+/* import React from 'react';
+import RecipeDetails from '../componentes/RecipeDetails';
+
+function FoodsId() {
+  return (
+    <div>
+      <RecipeDetails />
+    </div>
+  );
+}
+
+export default FoodsId; */

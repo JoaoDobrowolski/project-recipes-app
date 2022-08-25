@@ -4,9 +4,9 @@ import RecipeAppContext from '../context/RecipeAppContext';
 
 function RecipeDetails() {
   const {
-    detailsMeal,
+    // detailsMeal,
     setDetailsMeal,
-    detailsDrink,
+    // detailsDrink,
     setDetailsDrink,
   } = useContext(RecipeAppContext);
 
@@ -21,17 +21,20 @@ function RecipeDetails() {
       const response = await fetch(urlMeals);
       const json = await response.json();
       const { meals } = json;
-      const mealFoods = Object.keys(meals);
-      setDetailsMeal(mealFoods);
+      // const mealFoods = Object.keys(meals);
+      console.log(meals);
+      setDetailsMeal(meals);
     }
     if (foodOrDrink[1] === 'drinks') {
       const urlDrinks = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
       console.log('if drinks');
       const response = await fetch(urlDrinks);
       const json = await response.json();
-      const { drink } = json;
-      Object.keys(drink);
-      setDetailsDrink(drink);
+      const { drinks } = json;
+      console.log(drinks);
+      // Object.keys(drink);
+      // setDetailsDrink(drink[0]);
+      setDetailsDrink(drinks);
     }
   };
 
@@ -41,8 +44,7 @@ function RecipeDetails() {
 
   return (
     <div>
-      <h1>Renderizar o details</h1>
-      {
+      {/* {
         detailsMeal.length === 0 ? (
           <p>Loading</p>
         ) : (
@@ -198,7 +200,7 @@ function RecipeDetails() {
             }
           </>
         )
-      }
+      } */}
     </div>
   );
 }

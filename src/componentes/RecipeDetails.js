@@ -1,36 +1,50 @@
-import React, { useContext, useEffect, useState } from 'react';
-import RecipeDetails from '../componentes/RecipeDetails';
+import React, { useContext, useEffect } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 import RecipeAppContext from '../context/RecipeAppContext';
-import '../styles/styles.css';
 
-function FoodsId() {
+function RecipeDetails() {
   const {
-    detailsMeal,
+    // detailsMeal,
+    setDetailsMeal,
+    // detailsDrink,
+    setDetailsDrink,
   } = useContext(RecipeAppContext);
-  const [drinksRecommended, setDrinksRecommended] = useState();
 
-  const fetchRecommended = async () => {
-    const response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
-    const json = await response.json();
-    console.log(json);
-    setDrinksRecommended(json);
+  const { id } = useParams();
+  const location = useLocation();
+  const { pathname } = location;
+
+  const fetchRecipie = async () => {
+    const foodOrDrink = pathname.split('/');
+    if (foodOrDrink[1] === 'foods') {
+      const urlMeals = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
+      const response = await fetch(urlMeals);
+      const json = await response.json();
+      const { meals } = json;
+      // const mealFoods = Object.keys(meals);
+      // console.log(meals);
+      setDetailsMeal(meals);
+    }
+    if (foodOrDrink[1] === 'drinks') {
+      const urlDrinks = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
+      console.log('if drinks');
+      const response = await fetch(urlDrinks);
+      const json = await response.json();
+      const { drinks } = json;
+      console.log(drinks);
+      // Object.keys(drink);
+      // setDetailsDrink(drink[0]);
+      setDetailsDrink(drinks);
+    }
   };
 
   useEffect(async () => {
-    await fetchRecommended();
+    await fetchRecipie();
   }, []);
-
-  const seis = 6;
-  // const { drinks } = drinksRecommended;
-  if (drinksRecommended !== undefined) {
-    console.log(drinksRecommended.drinks.slice(0, seis));
-  }
 
   return (
     <div>
-      <RecipeDetails />
-      <h1>Renderizar o details</h1>
-      {
+      {/* {
         detailsMeal.length === 0 ? (
           <p>Loading</p>
         ) : (
@@ -186,55 +200,19 @@ function FoodsId() {
             }
           </>
         )
-      }
-      <div>
-        {
-          drinksRecommended === undefined ? (
-            <p>Loading</p>
-          ) : (
-            <div className="recommended_Card">
-              <div className="recommended">
-                {
-                  drinksRecommended.drinks.slice(0, seis)
-                    .map((drink, index) => (
-                      <section
-                        key={ drink.idDrink }
-                        data-testid={ `${index}-recomendation-card` }
-                      >
-                        <img
-                          src={ drink.strDrinkThumb }
-                          alt="imagem recipe"
-                          style={ { width: '100px' } }
-                        />
-                        <h3>{ drink.strAlcoholic }</h3>
-                        <p
-                          data-testid={ `${index}-recomendation-title` }
-                        >
-                          { drink.strDrink }
-                        </p>
-                      </section>
-                    ))
-                }
-              </div>
-            </div>
-          )
-        }
-      </div>
+      } */}
     </div>
   );
 }
 
-export default FoodsId;
+export default RecipeDetails;
 
-/* import React from 'react';
-import RecipeDetails from '../componentes/RecipeDetails';
-
-function FoodsId() {
-  return (
-    <div>
-      <RecipeDetails />
-    </div>
-  );
-}
-
-export default FoodsId; */
+/*
+1 - pegar o id da url
+--- saber se é comida ou drink
+2 - jogar na API
+-- ver os dados da api vindo.
+3 - destrinchar cada nfo da fetch
+-- salvar no estado
+-- pegar as infomações
+*/

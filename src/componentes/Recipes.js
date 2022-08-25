@@ -1,6 +1,8 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import RecipeAppContext from '../context/RecipeAppContext';
+
+let arrCateg = [];
 
 function Recipes() {
   const doze = 12; // magic numbers
@@ -8,8 +10,7 @@ function Recipes() {
   const { returnAPI, mealOrDrink, category, setReturnAPI,
     doRedirect, setDoRedirect } = useContext(RecipeAppContext);
 
-  const [buttonToggle, setButtonToggle] = useState(false);
-  // const [selectCategory, setSelectCategory] = useState('');
+  // const [selectCategory, setSelectCategory] = useState([0, 1]);
 
   const handleKeyObj = (str) => { // função feita para lidar com o nome da chave do obj retornado da api
     const keyObj = `${str + mealOrDrink.charAt(0).toUpperCase() + mealOrDrink.slice(1)}`;
@@ -18,7 +19,6 @@ function Recipes() {
 
   const getCategories = async (endpoint) => { // requisição à API com o endpoint como parâmetro
     const response = await fetch(endpoint);
-    // console.log(endpoint);
     const json = await response.json();
     setDoRedirect(false); // não irá redirecionar para a tela de detalhes da receita caso apareça apenas uma ao clicar em alguma categoria
     return json;
@@ -34,18 +34,28 @@ function Recipes() {
   };
 
   const filterCategory = async (categ) => { // função que escolhe a url correta com a categoria correta para realizar o fetch
-    setButtonToggle(!buttonToggle);
+    // setButtonToggle(!buttonToggle);
 
-    if (buttonToggle) {
-      return filterReset();
-    }
+    // if (buttonToggle) {
+    //   return filterReset();
+    // }
 
-    if (mealOrDrink === 'meal') {
-      const url = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${categ}`;
+    arrCateg.push(categ);
+    console.log([arrCateg[arrCateg.length - 2], arrCateg[arrCateg.length - 1]]);
+
+    // setSelectCategory((prevState) => ([prevState[1], categ]));
+    // console.log('selectCategory', selectCategory);
+
+    if (arrCateg[arrCateg.length - 1] !== arrCateg[arrCateg.length - 2]) {
+      if (mealOrDrink === 'meal') {
+        const url = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${categ}`;
+        return setReturnAPI(await getCategories(url));
+      }
+      const url = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${categ}`;
       return setReturnAPI(await getCategories(url));
     }
-    const url = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${categ}`;
-    setReturnAPI(await getCategories(url));
+    arrCateg = [];
+    return filterReset();
   };
 
   return (

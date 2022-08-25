@@ -3,7 +3,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import RecipeAppContext from '../context/RecipeAppContext';
 
 function RecipeDetails() {
-  const { setRecipesDetails } = useContext(RecipeAppContext);
+  const { setRecipesDetails, recipesDetails } = useContext(RecipeAppContext);
   const { id } = useParams();
   const location = useLocation();
   const { pathname } = location;
@@ -14,7 +14,9 @@ function RecipeDetails() {
       const urlMeals = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
       const response = await fetch(urlMeals);
       const json = await response.json();
-      return setRecipesDetails(json);
+      const { meals } = json;
+      setRecipesDetails(meals);
+      Object.keys(recipesDetails);
     }
     if (foodOrDrink[1] === 'drinks') {
       const urlDrinks = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
@@ -32,6 +34,48 @@ function RecipeDetails() {
   return (
     <div>
       <h1>Renderizar o details</h1>
+      {
+        recipesDetails.length === 0 ? (
+          <p>Loading</p>
+        ) : (
+          <>
+            {
+              recipesDetails
+                .map((e) => (
+                  <section key={ e.idMeal }>
+                    <img
+                      data-testid="recipe-photo"
+                      src={ e.strMealThumb }
+                      alt="imagem recipe"
+                      style={ { width: '100px' } }
+                    />
+                    <p
+                      data-testid="recipe-title"
+                    >
+                      {e.strMeal}
+                    </p>
+                    <p
+                      data-testid="recipe-category"
+                    >
+                      {e.strCategory}
+                    </p>
+                    <p
+                      data-testid={ `${e.strIngredient1}-ingredient-name-and-measure` }
+                    >
+                      {`${e.strIngredient1} - ${e.strMeasure1}`}
+                    </p>
+                    <p
+                      data-testid="instructions"
+                    >
+                      {e.strInstructions}
+                    </p>
+
+                  </section>
+                ))
+            }
+          </>
+        )
+      }
     </div>
   );
 }

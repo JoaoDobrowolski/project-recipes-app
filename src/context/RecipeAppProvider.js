@@ -9,6 +9,8 @@ function RecipeAppProvider({ children }) {
   // estado com o id de cada receita
   const [detailsMeal, setDetailsMeal] = useState('');
   const [detailsDrink, setDetailsDrink] = useState('');
+  const [category, setCategory] = useState('');
+  const [doRedirect, setDoRedirect] = useState(true);
 
   const contextValue = {
     returnAPI,
@@ -21,6 +23,10 @@ function RecipeAppProvider({ children }) {
     setDetailsMeal,
     detailsDrink,
     setDetailsDrink,
+    category,
+    setCategory,
+    doRedirect,
+    setDoRedirect,
   };
 
   return (

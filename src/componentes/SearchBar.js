@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import RecipeAppContext from '../context/RecipeAppContext';
 
 function SearchBar() {
-  const { setReturnAPI, mealOrDrink } = useContext(RecipeAppContext);
+  const { setReturnAPI, mealOrDrink, setDoRedirect } = useContext(RecipeAppContext);
 
   const [searchInput, setSearchInput] = useState(''); // input de busca (atualiza conforme digita)
   const [radioSelected, setRadioSelected] = useState(''); // usado para verificar em qual radio está clicado (atualiza conforme clica no radio)
@@ -10,6 +10,7 @@ function SearchBar() {
   const getAPIs = async (endpoint) => { // requisição à API com o endpoint como parâmetro, pois será decidido apenas após aperta o botão de busca
     const response = await fetch(endpoint);
     const json = await response.json();
+    setDoRedirect(true); // irá redirecionar para a tela de detalhes da receita caso apareça apenas uma ao clicar no searchButton
     return json;
   };
 

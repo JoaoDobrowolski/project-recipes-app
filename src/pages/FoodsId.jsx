@@ -1,21 +1,30 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import RecipeDetails from '../componentes/RecipeDetails';
 import RecipeAppContext from '../context/RecipeAppContext';
+import '../styles/styles.css';
 
 function FoodsId() {
   const {
     detailsMeal,
   } = useContext(RecipeAppContext);
+  const [drinksRecommended, setDrinksRecommended] = useState();
 
   const fetchRecommended = async () => {
     const response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
     const json = await response.json();
     console.log(json);
+    setDrinksRecommended(json);
   };
 
   useEffect(async () => {
     await fetchRecommended();
   }, []);
+
+  const seis = 6;
+  // const { drinks } = drinksRecommended;
+  if (drinksRecommended !== undefined) {
+    console.log(drinksRecommended.drinks.slice(0, seis));
+  }
 
   return (
     <div>
@@ -178,6 +187,39 @@ function FoodsId() {
           </>
         )
       }
+      <div>
+        {
+          drinksRecommended === undefined ? (
+            <p>Loading</p>
+          ) : (
+            <div className="recommended_Card">
+              <div className="recommended">
+                {
+                  drinksRecommended.drinks.slice(0, seis)
+                    .map((drink, index) => (
+                      <section
+                        key={ drink.idDrink }
+                        data-testid={ `${index}-recomendation-card` }
+                      >
+                        <img
+                          src={ drink.strDrinkThumb }
+                          alt="imagem recipe"
+                          style={ { width: '100px' } }
+                        />
+                        <h3>{ drink.strAlcoholic }</h3>
+                        <p
+                          data-testid={ `${index}-recomendation-title` }
+                        >
+                          { drink.strDrink }
+                        </p>
+                      </section>
+                    ))
+                }
+              </div>
+            </div>
+          )
+        }
+      </div>
     </div>
   );
 }

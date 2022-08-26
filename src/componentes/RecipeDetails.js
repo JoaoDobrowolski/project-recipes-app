@@ -22,7 +22,7 @@ function RecipeDetails() {
       const json = await response.json();
       const { meals } = json;
       // const mealFoods = Object.keys(meals);
-      console.log(meals);
+      // console.log(meals);
       setDetailsMeal(meals);
     }
     if (foodOrDrink[1] === 'drinks') {

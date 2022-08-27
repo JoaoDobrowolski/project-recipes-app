@@ -11,17 +11,12 @@ const Footer = () => {
   const route = (history.location.pathname);
 
   const handleMealClick = () => {
-    if (route !== '/foods') {
+    if (route === '/foods') {
       setReturnAPI('');
-      history.push('/foods');
+      return history.push('/drinks');
     }
-  };
-
-  const handleDrinkClick = () => {
-    if (route !== '/drinks') {
-      setReturnAPI('');
-      history.push('/drinks');
-    }
+    setReturnAPI('');
+    return history.push('/foods');
   };
 
   return (
@@ -41,7 +36,7 @@ const Footer = () => {
         alt="drink icon"
         src={ drinkIcon }
         data-testid="drinks-bottom-btn"
-        onClick={ () => handleDrinkClick() }
+        onClick={ () => handleMealClick() }
       />
     </footer>
   );

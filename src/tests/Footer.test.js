@@ -16,17 +16,24 @@ describe('Testes o componente Footer', () => {
     userEvent.type(email, 'test@test.com')
     userEvent.type(senha, '1234567')
     userEvent.click(btn)
+
+    const btnDrink = screen.getByRole('button', {
+      name: /drink icon/i
+      })
+  
+    userEvent.click(btnDrink)
     
     const btnFood = screen.getByRole('button', {
       name: /meal icon/i
     })
-    
-    userEvent.click(btnFood)
-    
-    const text = screen.getByText('Foods')
+    const text = screen.getByText('Drinks')
     
     expect(text).toBeDefined()
-    // screen.logTestingPlaygroundURL()
+    userEvent.click(btnFood)
+    
+    expect(text).toBeDefined()
+    
+    screen.logTestingPlaygroundURL()
 }),
 it('Testes se o icone Drink redireciona para a pagina Drink', () => {
   const { history } = renderWithRouter(<RecipeAppProvider><App /></RecipeAppProvider>)
@@ -45,6 +52,6 @@ it('Testes se o icone Drink redireciona para a pagina Drink', () => {
 
   userEvent.click(btnDrink)
 
-  screen.logTestingPlaygroundURL()
+  // screen.logTestingPlaygroundURL()
 })
 })

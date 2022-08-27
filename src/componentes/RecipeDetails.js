@@ -27,11 +27,11 @@ function RecipeDetails() {
     }
     if (foodOrDrink[1] === 'drinks') {
       const urlDrinks = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
-      console.log('if drinks');
+      // console.log('if drinks');
       const response = await fetch(urlDrinks);
       const json = await response.json();
       const { drinks } = json;
-      console.log(drinks);
+      // console.log(drinks);
       // Object.keys(drink);
       // setDetailsDrink(drink[0]);
       setDetailsDrink(drinks);

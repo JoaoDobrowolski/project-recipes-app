@@ -41,7 +41,7 @@ function Recipes() {
     // }
 
     arrCateg.push(categ);
-    console.log([arrCateg[arrCateg.length - 2], arrCateg[arrCateg.length - 1]]);
+    // console.log([arrCateg[arrCateg.length - 2], arrCateg[arrCateg.length - 1]]);
 
     // setSelectCategory((prevState) => ([prevState[1], categ]));
     // console.log('selectCategory', selectCategory);

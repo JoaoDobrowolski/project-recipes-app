@@ -10,19 +10,16 @@ footer {
 }
 
 .recommended_Card {
-  width: 100px;
-  overflow: hidden;
   background-color: yellow;
-
+  overflow: hidden;
+  width: 100px;
 }
 
 .recommended {
-
+  background-color: green;
   display: grid;
   grid-template-columns: auto auto;
   height: 100px;
-  width: 117px;
   overflow-y: scroll;
-  background-color: green;
-  
+  width: 117px;
 }

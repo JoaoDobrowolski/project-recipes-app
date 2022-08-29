@@ -41,7 +41,7 @@ function Recipes() {
     // }
 
     arrCateg.push(categ);
-    console.log([arrCateg[arrCateg.length - 2], arrCateg[arrCateg.length - 1]]);
+    // console.log([arrCateg[arrCateg.length - 2], arrCateg[arrCateg.length - 1]]);
 
     // setSelectCategory((prevState) => ([prevState[1], categ]));
     // console.log('selectCategory', selectCategory);
@@ -83,6 +83,9 @@ function Recipes() {
         </button>
 
       </div>
+
+      {returnAPI[`${mealOrDrink}s`] === null
+ && global.alert('Sorry, we haven\'t found any recipes for these filters.') }
 
       {
         (returnAPI && returnAPI[`${mealOrDrink}s`] !== null && doRedirect) // caso tenha apenas 1 receita, redirecionar para a pagina de detalhes dela

@@ -8,3 +8,18 @@ footer {
   position: fixed;
   width: 100%;
 }
+
+.recommended_Card {
+  background-color: yellow;
+  overflow: hidden;
+  width: 100px;
+}
+
+.recommended {
+  background-color: green;
+  display: grid;
+  grid-template-columns: auto auto;
+  height: 100px;
+  overflow-y: scroll;
+  width: 117px;
+}

@@ -11,8 +11,7 @@ footer {
 
 .recommended_Card {
   background-color: yellow;
-  overflow: hidden;
-  width: 100px;
+  margin-bottom: 20px;
 }
 
 .recommended {
@@ -21,5 +20,14 @@ footer {
   grid-template-columns: auto auto;
   height: 100px;
   overflow-y: scroll;
-  width: 117px;
+}
+
+.start_recipe {
+
+  /* bottom: 0;
+  height: 100px;
+  left: 0; */
+  bottom: 0;
+  position: fixed;
+  width: 100%;
 }

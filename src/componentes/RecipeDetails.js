@@ -4,14 +4,13 @@ import RecipeAppContext from '../context/RecipeAppContext';
 
 function RecipeDetails() {
   const {
-    // detailsMeal,
     setDetailsMeal,
-    // detailsDrink,
     setDetailsDrink,
   } = useContext(RecipeAppContext);
 
   const { id } = useParams();
   const location = useLocation();
+  // console.log(location);
   const { pathname } = location;
 
   const fetchRecipie = async () => {
@@ -21,19 +20,15 @@ function RecipeDetails() {
       const response = await fetch(urlMeals);
       const json = await response.json();
       const { meals } = json;
-      // const mealFoods = Object.keys(meals);
-      // console.log(meals);
+      // console.log(json, 'oioi');
       setDetailsMeal(meals);
     }
     if (foodOrDrink[1] === 'drinks') {
       const urlDrinks = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
-      // console.log('if drinks');
       const response = await fetch(urlDrinks);
       const json = await response.json();
       const { drinks } = json;
-      // console.log(drinks);
-      // Object.keys(drink);
-      // setDetailsDrink(drink[0]);
+      // console.log(json);
       setDetailsDrink(drinks);
     }
   };
@@ -212,7 +207,7 @@ export default RecipeDetails;
 --- saber se é comida ou drink
 2 - jogar na API
 -- ver os dados da api vindo.
-3 - destrinchar cada nfo da fetch
+3 - destrinchar cada info da fetch
 -- salvar no estado
 -- pegar as infomações
 */

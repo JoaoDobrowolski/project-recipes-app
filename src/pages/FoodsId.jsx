@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import Button from '../componentes/Button';
 import RecipeDetails from '../componentes/RecipeDetails';
 import RecipeAppContext from '../context/RecipeAppContext';
 import '../styles/styles.css';
@@ -219,6 +220,9 @@ function FoodsId() {
             </div>
           )
         }
+      </div>
+      <div>
+        <Button />
       </div>
     </div>
   );

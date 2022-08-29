@@ -11,7 +11,8 @@ function DrinksId() {
 
 export default DrinksId; */
 
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import Button from '../componentes/Button';
 import RecipeDetails from '../componentes/RecipeDetails';
 import RecipeAppContext from '../context/RecipeAppContext';
 
@@ -19,16 +20,27 @@ function FoodsId() {
   const {
     detailsDrink,
   } = useContext(RecipeAppContext);
+  const [mealsRecommended, setMealsRecommended] = useState();
 
   const fetchRecommended = async () => {
     const response = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=');
     const json = await response.json();
-    console.log(json);
+    // console.log(json);
+    setMealsRecommended(json);
   };
 
   useEffect(async () => {
     await fetchRecommended();
   }, []);
+
+  // const oito = 8;
+  const seis = 6;
+
+  if (mealsRecommended !== undefined) {
+    /* const eigthDrinks = mealsRecommended.meals.slice(0, oito).map((meal) => meal)
+      .filter((e) => e.strMeal !== 'Burek' && e.strMeal !== 'Tamiya');
+    console.log(eigthDrinks); */
+  }
 
   return (
     <div>
@@ -179,20 +191,49 @@ function FoodsId() {
                       allowFullScreen
                       title="Embedded youtube"
                     /> */}
-                    <p
-                      data-testid="0-recomendation-card"
-                    >
-                      {e.strDrinkAlternate}
-                    </p>
-
                   </section>
                 ))
             }
           </>
         )
       }
+      <div>
+        {
+          mealsRecommended === undefined ? (
+            <p>Loading</p>
+          ) : (
+            <div className="recommended_Card">
+              <div className="recommended">
+                {
+                  mealsRecommended.meals.slice(0, seis)
+                    .map((meals, index) => (
+                      <section
+                        key={ meals.idMeals }
+                        data-testid={ `${index}-recomendation-card` }
+                      >
+                        <img
+                          src={ meals.strMealThumb }
+                          alt="imagem recipe"
+                          style={ { width: '100px' } }
+                        />
+                        <h3>{ meals.strCategory }</h3>
+                        <p
+                          data-testid={ `${index}-recomendation-title` }
+                        >
+                          { meals.strMeal}
+                        </p>
+                      </section>
+                    ))
+                }
+              </div>
+            </div>
+          )
+        }
+      </div>
+      <div>
+        <Button />
+      </div>
     </div>
   );
 }
-
 export default FoodsId;

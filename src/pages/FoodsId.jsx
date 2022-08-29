@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import Button from '../componentes/Button';
 import RecipeDetails from '../componentes/RecipeDetails';
 import RecipeAppContext from '../context/RecipeAppContext';
 import '../styles/styles.css';
@@ -12,7 +13,7 @@ function FoodsId() {
   const fetchRecommended = async () => {
     const response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
     const json = await response.json();
-    console.log(json);
+    // console.log(json);
     setDrinksRecommended(json);
   };
 
@@ -23,7 +24,7 @@ function FoodsId() {
   const seis = 6;
   // const { drinks } = drinksRecommended;
   if (drinksRecommended !== undefined) {
-    console.log(drinksRecommended.drinks.slice(0, seis));
+    // console.log(drinksRecommended.drinks.slice(0, seis));
   }
 
   return (
@@ -219,6 +220,9 @@ function FoodsId() {
             </div>
           )
         }
+      </div>
+      <div>
+        <Button />
       </div>
     </div>
   );

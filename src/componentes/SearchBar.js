@@ -21,12 +21,18 @@ function SearchBar() {
     } if (radioSelected === 'nameRadio') {
       if (mealOrDrink === 'meal') return (`https://www.themealdb.com/api/json/v1/1/search.php?s=${searchInput}`);
       return (`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${searchInput}`);
-    } if (radioSelected === 'firstLetterRadio') {
-      if (searchInput.length > 1) {
-        return global.alert('Your search must have only 1 (one) character');
+    } if (radioSelected === 'firstLetterRadio' && searchInput.length === 1) {
+      if (mealOrDrink === 'meal') {
+        return (`https://www.themealdb.com/api/json/v1/1/search.php?f=${searchInput}`);
       }
-      if (mealOrDrink === 'meal') return (`https://www.themealdb.com/api/json/v1/1/search.php?f=${searchInput}`);
       return (`https://www.thecocktaildb.com/api/json/v1/1/search.php?f=${searchInput}`);
+    } if (radioSelected === 'firstLetterRadio' && searchInput.length > 1) {
+      if (mealOrDrink === 'meal') {
+        global.alert('Your search must have only 1 (one) character');
+        return ('https://www.themealdb.com/api/json/v1/1/filter.php?i=null');
+      }
+      global.alert('Your search must have only 1 (one) character');
+      return ('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=null');
     }
   };
 
@@ -34,14 +40,10 @@ function SearchBar() {
     try {
       setReturnAPI(await getAPIs(chooseURL()));
     } catch (error) {
-      if (radioSelected === 'ingredientRadio' && mealOrDrink === 'drink') { // tive que fazer um try catch pois a API com essas especificações do if não realiza o fetch caso a palavra não seja exatamente igual a alguma do seu banco de dados
-        global.alert('Sorry, we haven\'t found any recipes for these filters.');
-      }
-    }
-    const api = await getAPIs(chooseURL());
-
-    if (api[`${mealOrDrink}s`] === null) { // caso não tenha nenhum drink ou meal
+      // if (radioSelected === 'ingredientRadio' && mealOrDrink === 'drink') { // tive que fazer um try catch pois a API com essas especificações do if não realiza o fetch caso a palavra não seja exatamente igual a alguma do seu banco de dados
+      //   console.log(mealOrDrink);
       global.alert('Sorry, we haven\'t found any recipes for these filters.');
+      // }
     }
   };
 

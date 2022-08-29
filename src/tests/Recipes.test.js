@@ -23,7 +23,8 @@ import letterMeal from './mockData/letterMeal';
 
 
 describe('Teste o componente Recipes', () => {
-test.skip('Se o radio selecionado for Ingredient, a busca na API é feita corretamente pelo ingrediente',async () => {
+
+test('Se o radio selecionado for Ingredient, a busca na API é feita corretamente pelo ingrediente',async () => {
 const { history } = renderWithRouter(<RecipeAppProvider><App /></RecipeAppProvider>)
 history.push('/foods')
 
@@ -84,7 +85,72 @@ await waitFor(() => expect(global.fetch)
 global.fetch.mockRestore()
 });
 
-test.skip('Exiba um `alert` caso nenhuma receita seja encontrada' , async () => {
+test('Exiba um `alert` caso nenhuma receita seja encontrada pelo radio Ingrediente' , async () => {
+  const { history } = renderWithRouter(<RecipeAppProvider><App /></RecipeAppProvider>)
+  history.push('/foods')
+
+const alertMock = jest.spyOn(window,'alert').mockImplementation();
+
+  
+  global.fetch = jest.fn().mockImplementation((url) => {
+  
+  if(url === 'https://www.themealdb.com/api/json/v1/1/list.php?c=list') {
+    return Promise.resolve({
+      json: jest.fn().mockResolvedValueOnce(inicialFoods)
+    })
+  }
+  
+  if(url === 'https://www.themealdb.com/api/json/v1/1/search.php?s=') {
+  return Promise.resolve({
+  json: jest.fn().mockResolvedValueOnce(mealCategories),
+  })
+  }
+  
+  if(url === `https://www.themealdb.com/api/json/v1/1/filter.php?i=xablau`) {
+  return Promise.resolve({
+  json: jest.fn().mockResolvedValueOnce(emptyMeals)
+  })
+  }
+  });
+  
+  await waitFor(() => expect(global.fetch).toHaveBeenCalled())
+  
+  await waitFor(() => expect(global.fetch)
+  .toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/list.php?c=list'))
+
+  await waitFor(() => expect(global.fetch).toHaveBeenCalled())
+  
+  await waitFor(() => expect(global.fetch)
+  .toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/search.php?s='))
+  
+  const searchIcon = screen.getByTestId('search-top-btn')
+  userEvent.click(searchIcon)
+  
+  const inputSearch = screen.getByTestId('search-input')
+  userEvent.type(inputSearch, 'xablau')
+  
+  const searchButton = screen.getByRole('button', { name: /buscar/i })
+  
+  const radioIngredient = screen.getByLabelText(/ingredient/i)
+
+  userEvent.click(radioIngredient)
+  
+  userEvent.click(searchButton)
+  
+  await waitFor(() => expect(global.fetch).toHaveBeenCalled())
+      
+  await waitFor(() => expect(global.fetch)
+  .toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/filter.php?i=xablau'))
+
+await waitFor(() => expect(alertMock).toHaveBeenCalled())
+
+await waitFor(() => expect(alertMock).toHaveBeenCalledWith(`Sorry, we haven't found any recipes for these filters.`))
+
+  
+  global.fetch.mockRestore()
+  });
+
+test('Exiba um `alert` caso nenhuma receita seja encontrada pelo radio Name' , async () => {
   const { history } = renderWithRouter(<RecipeAppProvider><App /></RecipeAppProvider>)
   history.push('/foods')
 
@@ -154,13 +220,10 @@ await waitFor(() => expect(alertMock).toHaveBeenCalledWith(`Sorry, we haven't fo
   global.fetch.mockRestore()
   });
 
-  test('Na tela de bebidas, se o radio selecionado for First letter, a busca na API é feita corretamente pelo primeira letra' , async () => {
+  test('Na tela de Foods, se o radio selecionado for First letter, com apenas uma letra' , async () => {
     const { history } = renderWithRouter(<RecipeAppProvider><App /></RecipeAppProvider>)
     history.push('/foods')
-  
-  const alertMock = jest.spyOn(window,'alert').mockImplementation();
-  
-    
+
     global.fetch = jest.fn().mockImplementation((url) => {
     
     if(url === 'https://www.themealdb.com/api/json/v1/1/search.php?s=') {
@@ -175,12 +238,17 @@ await waitFor(() => expect(alertMock).toHaveBeenCalledWith(`Sorry, we haven't fo
     })
     }
     
-    if(url === `https://www.themealdb.com/api/json/v1/1/search.php?s=a`) {
+    if(url === `https://www.themealdb.com/api/json/v1/1/search.php?f=a`) {
     return Promise.resolve({
     json: jest.fn().mockResolvedValueOnce(letterMeal)
     })
     }
     });
+
+      await waitFor(() => expect(global.fetch).toHaveBeenCalled())
+  
+  await waitFor(() => expect(global.fetch)
+  .toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/list.php?c=list'))
     
     await waitFor(() => expect(global.fetch).toHaveBeenCalled())
     
@@ -195,35 +263,24 @@ await waitFor(() => expect(alertMock).toHaveBeenCalledWith(`Sorry, we haven't fo
     
     const searchButton = screen.getByRole('button', { name: /buscar/i })
     
-    const radioName = screen.getByText(/name/i)
+    const radioLetter = screen.getByTestId('first-letter-search-radio')
 
-    userEvent.click(radioName)
-    
-    console.log(radioName)
-
-    // expect(radioName.nodeValue).toBe('name')
+    userEvent.click(radioLetter)
 
     userEvent.click(searchButton)
-    
+
     await waitFor(() => expect(global.fetch).toHaveBeenCalled())
         
     await waitFor(() => expect(global.fetch)
-    .toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/search.php?s=a'))
-    
-    const allCategoryButton = screen.getByTestId('All-category-filter')
-    
-    userEvent.click(allCategoryButton)
-    
-    await waitFor(() => expect(global.fetch).toHaveBeenCalled())
-    
-    await waitFor(() => expect(global.fetch)
-    .toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/search.php?s='))
+    .toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/search.php?f=a'))
+
+    screen.logTestingPlaygroundURL()
 
     global.fetch.mockRestore()
     });
     
 
-test.skip('Se a busca por cateroria Beef retorna as opções de BeefMeals',async () => {
+test('Se a busca por cateroria Beef retorna as opções de BeefMeals',async () => {
 const { history } = renderWithRouter(<RecipeAppProvider><App /></RecipeAppProvider>)
 history.push('/foods')
 
@@ -285,7 +342,7 @@ await waitFor(() => expect(global.fetch)
 global.fetch.mockRestore()
 });
 
-test.skip('Se a busca por Name e detalhes de uma única receita de Foods',async () => {
+test('Se a busca por Name e detalhes de uma única receita de Foods',async () => {
 const { history } = renderWithRouter(<RecipeAppProvider><App /></RecipeAppProvider>)
 history.push('/foods')
 
@@ -349,42 +406,42 @@ toHaveBeenCalledWith("https://www.themealdb.com/api/json/v1/1/search.php?s=Arrab
 global.fetch.mockRestore()
 });
 
-test.skip('Teste a pagina de busca de Drinks por ingrediente', async () => {
+test('Teste a pagina de busca de Drinks por ingrediente sem encontrar resultado', async () => {
 const { history } = renderWithRouter(<RecipeAppProvider><App /></RecipeAppProvider>)
 history.push('/drinks')
 
+const alertMock = jest.spyOn(window,'alert').mockImplementation();
+
 global.fetch = jest.fn().mockImplementation((url) => {
 
-if(url === 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=') {
+if(url === 'https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list') {
 return Promise.resolve({
 json: jest.fn().mockResolvedValueOnce(drinks)
 })
 }
 
-if(url === 'https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list') {
+if(url === 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=') {
 return Promise.resolve({
 json: jest.fn().mockResolvedValueOnce(drinkCategories),
 })
 }
 
-if(url === 'https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=lemon') {
+if(url === 'https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=xablau') {
 return Promise.resolve({
-json: jest.fn().mockResolvedValueOnce(lemonsDrink),
+json: jest.fn().mockResolvedValueOnce(emptyDrinks),
 })
 }
-
 })
 
 await waitFor(() => expect(global.fetch).toHaveBeenCalled())
 
 await waitFor(() => expect(global.fetch)
+.toHaveBeenCalledWith('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list'))
+
+await waitFor(() => expect(global.fetch).toHaveBeenCalled())
+
+await waitFor(() => expect(global.fetch)
 .toHaveBeenCalledWith('https://www.thecocktaildb.com/api/json/v1/1/search.php?s='))
-
-const firstInitialDrink = screen.getByRole('img', {
-name: /gg/i
-})
-
-expect(firstInitialDrink).toBeDefined()
 
 const searchIcon = screen.getByRole('img', {
 name: /icon\-search/i
@@ -394,7 +451,7 @@ userEvent.click(searchIcon)
 
 const inputSearch = screen.getByTestId('search-input')
 
-userEvent.type(inputSearch, 'lemon')
+userEvent.type(inputSearch, 'xablau')
 
 const searchButton = screen.getByRole('button', {
 name: /buscar/i
@@ -405,19 +462,86 @@ const radioIngredient = screen.getByLabelText(/ingredient/i)
 userEvent.click(radioIngredient)
 
 userEvent.click(searchButton)
-// screen.logTestingPlaygroundURL()
-
 
 await waitFor(() => expect(global.fetch).toHaveBeenCalled())
 
 await waitFor(() => expect(global.fetch)
-.toHaveBeenCalledWith('https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=lemon'))
+.toHaveBeenCalledWith('https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=xablau'))
 
+await waitFor(() => expect(alertMock).toHaveBeenCalled())
+
+await waitFor(() => expect(alertMock).toHaveBeenCalledWith(`Sorry, we haven't found any recipes for these filters.`))
 
 global.fetch.mockRestore()
 });
 
-test.skip('Teste a pagina de busca de Drinks por nome', async () => {
+test('Teste a pagina de busca de Drinks por ingrediente', async () => {
+  const { history } = renderWithRouter(<RecipeAppProvider><App /></RecipeAppProvider>)
+  history.push('/drinks')
+  
+  global.fetch = jest.fn().mockImplementation((url) => {
+  
+  if(url === 'https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list') {
+  return Promise.resolve({
+  json: jest.fn().mockResolvedValueOnce(drinks)
+  })
+  }
+  
+  if(url === 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=') {
+  return Promise.resolve({
+  json: jest.fn().mockResolvedValueOnce(drinkCategories),
+  })
+  }
+  
+  if(url === 'https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=lemon') {
+  return Promise.resolve({
+  json: jest.fn().mockResolvedValueOnce(lemonsDrink),
+  })
+  }  
+  })
+  
+  await waitFor(() => expect(global.fetch).toHaveBeenCalled())
+  
+  await waitFor(() => expect(global.fetch)
+  .toHaveBeenCalledWith('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list'))
+
+  await waitFor(() => expect(global.fetch).toHaveBeenCalled())
+  
+  await waitFor(() => expect(global.fetch)
+  .toHaveBeenCalledWith('https://www.thecocktaildb.com/api/json/v1/1/search.php?s='))
+
+  const searchIcon = screen.getByRole('img', {
+  name: /icon\-search/i
+  })
+  
+  userEvent.click(searchIcon)
+  
+  const inputSearch = screen.getByTestId('search-input')
+  
+  userEvent.type(inputSearch, 'lemon')
+  
+  const searchButton = screen.getByRole('button', {
+  name: /buscar/i
+  })
+  
+  const radioIngredient = screen.getByLabelText(/ingredient/i)
+  
+  userEvent.click(radioIngredient)
+  
+  userEvent.click(searchButton)
+  // screen.logTestingPlaygroundURL()
+  
+  
+  await waitFor(() => expect(global.fetch).toHaveBeenCalled())
+  
+  await waitFor(() => expect(global.fetch)
+  .toHaveBeenCalledWith('https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=lemon'))
+  
+  
+  global.fetch.mockRestore()
+  });
+
+test('Teste a pagina de busca de Drinks por nome', async () => {
 const { history } = renderWithRouter(<RecipeAppProvider><App /></RecipeAppProvider>)
 history.push('/drinks')
 
@@ -522,7 +646,7 @@ screen.logTestingPlaygroundURL()
 global.fetch.mockRestore()
 });
 
-test.skip('Teste a pagina de busca de Drinks por letra e detalhes da receita', async () => {
+test('Teste a pagina de busca de Drinks por letra e detalhes da receita', async () => {
 const { history } = renderWithRouter(<RecipeAppProvider><App /></RecipeAppProvider>)
 history.push('/drinks')
 
@@ -615,7 +739,7 @@ await waitFor(() => expect(global.fetch)
 global.fetch.mockRestore()
 });
 
-test.skip('Testa a tela de Drink com o filtro de categoria', async () => {
+test('Testa a tela de Drink com o filtro de categoria', async () => {
 const { history } = renderWithRouter(<RecipeAppProvider><App /></RecipeAppProvider>)
 history.push('/drinks')
 
@@ -668,7 +792,7 @@ await waitFor(() => expect(global.fetch)
 global.fetch.mockRestore()
 });
 
-test.skip('Se a busca por Name e detalhes de uma única receita de Drink',async () => {
+test('Se a busca por Name e detalhes de uma única receita de Drink',async () => {
 const { history } = renderWithRouter(<RecipeAppProvider><App /></RecipeAppProvider>)
 history.push('/drinks')
 
@@ -737,7 +861,89 @@ await waitFor(() => expect(global.fetch).toHaveBeenCalledWith('https://www.theme
 
 });
 
-test.skip('Teste a pagina de busca de Drinks por letra', async () => {
+
+test('Teste a pagina de busca Food com mais de uma letra, deve ocorrer um alerta', async () => {
+  const { history } = renderWithRouter(<RecipeAppProvider><App /></RecipeAppProvider>)
+  history.push('/foods')
+  
+  const alertMock = jest.spyOn(window,'alert').mockImplementation();
+  
+  global.fetch = jest.fn().mockImplementation((url) => {
+  
+    if(url === 'https://www.themealdb.com/api/json/v1/1/search.php?s=') {
+    return Promise.resolve({
+      json: jest.fn().mockResolvedValueOnce(inicialFoods)
+    })
+  }
+  
+  if(url === 'https://www.themealdb.com/api/json/v1/1/list.php?c=list') {
+  return Promise.resolve({
+  json: jest.fn().mockResolvedValueOnce(mealCategories),
+  })
+  }
+  
+  if(url === 'https://www.themealdb.com/api/json/v1/1/filter.php?i=null') {
+  return Promise.resolve({
+  json: jest.fn().mockResolvedValueOnce(emptyMeals),
+  })
+  }
+  
+  })
+  
+  await waitFor(() => expect(global.fetch).toHaveBeenCalled())
+  
+  await waitFor(() => expect(global.fetch)
+  .toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/search.php?s='))
+  
+  await waitFor(() => expect(global.fetch).toHaveBeenCalled())
+  
+  await waitFor(() => expect(global.fetch)
+  .toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/list.php?c=list'))
+  
+  const iconSearch = screen.getByTestId('search-top-btn')
+  userEvent.click(iconSearch)
+  
+  const inputSearch = screen.getByTestId('search-input')
+  
+  userEvent.type(inputSearch, 'asdfg')
+  
+  const radioLetter = screen.getByTestId('first-letter-search-radio')
+  
+  userEvent.click(radioLetter)
+  
+  const btnSearch = screen.getByTestId('exec-search-btn')
+  
+  userEvent.click(btnSearch)
+  
+  await waitFor(() => expect(alertMock).toHaveBeenCalled())
+  
+  await waitFor(() => expect(alertMock).toHaveBeenCalledWith(`Your search must have only 1 (one) character`))
+  
+  
+  await waitFor(() => expect(global.fetch).toHaveBeenCalled())
+  
+  await waitFor(() => expect(global.fetch)
+  .toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/filter.php?i=null'))
+  
+  await waitFor(() => expect(alertMock).toHaveBeenCalled())
+  
+  await waitFor(() => expect(alertMock).toHaveBeenCalledWith(`Your search must have only 1 (one) character`))
+  
+  
+  await waitFor(() => expect(global.fetch).toHaveBeenCalled())
+  
+  await waitFor(() => expect(global.fetch)
+  .toHaveBeenCalledWith('https://www.themealdb.com/api/json/v1/1/filter.php?i=null'))
+  
+  await waitFor(() => expect(alertMock).toHaveBeenCalled())
+  
+  await waitFor(() => expect(alertMock).toHaveBeenCalledWith(`Sorry, we haven't found any recipes for these filters.`))
+  
+  screen.logTestingPlaygroundURL()
+  
+  });
+
+test('Teste a pagina de busca Drink com mais de uma letra, deve ocorrer um alerta', async () => {
 const { history } = renderWithRouter(<RecipeAppProvider><App /></RecipeAppProvider>)
 history.push('/drinks')
 
@@ -745,10 +951,10 @@ const alertMock = jest.spyOn(window,'alert').mockImplementation();
 
 global.fetch = jest.fn().mockImplementation((url) => {
 
-if(url === 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=') {
-return Promise.resolve({
-json: jest.fn().mockResolvedValueOnce(drinks)
-})
+  if(url === 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=') {
+  return Promise.resolve({
+    json: jest.fn().mockResolvedValueOnce(drinks)
+  })
 }
 
 if(url === 'https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list') {
@@ -757,24 +963,11 @@ json: jest.fn().mockResolvedValueOnce(drinkCategories),
 })
 }
 
-if(url === 'https://www.thecocktaildb.com/api/json/v1/1/search.php?f=a') {
+if(url === 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=null') {
 return Promise.resolve({
-json: jest.fn().mockResolvedValueOnce(letterDrink),
+json: jest.fn().mockResolvedValueOnce(emptyDrinks),
 })
 }
-
-if(url === `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=17222`) {
-return Promise.resolve({
-json: jest.fn().mockResolvedValueOnce(drinkDetails)
-})
-}
-
-if(url === 'https://www.themealdb.com/api/json/v1/1/search.php?s=') {
-return Promise.resolve({
-json: jest.fn().mockResolvedValueOnce(inicialFoods)
-})
-}
-
 
 })
 
@@ -783,41 +976,55 @@ await waitFor(() => expect(global.fetch).toHaveBeenCalled())
 await waitFor(() => expect(global.fetch)
 .toHaveBeenCalledWith('https://www.thecocktaildb.com/api/json/v1/1/search.php?s='))
 
-const firstInitialDrink = screen.getByRole('img', {
-name: /gg/i
-})
+await waitFor(() => expect(global.fetch).toHaveBeenCalled())
 
-expect(firstInitialDrink).toBeDefined()
+await waitFor(() => expect(global.fetch)
+.toHaveBeenCalledWith('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list'))
 
-const searchIcon = screen.getByRole('img', {
-name: /icon\-search/i
-})
-
-userEvent.click(searchIcon)
+const iconSearch = screen.getByTestId('search-top-btn')
+userEvent.click(iconSearch)
 
 const inputSearch = screen.getByTestId('search-input')
 
-userEvent.type(inputSearch, 'aa')
+userEvent.type(inputSearch, 'asdfg')
 
-const searchButton = screen.getByRole('button', {
-name: /buscar/i
-})
-
-const radioLetter =screen.getByRole('radio', {
-name: /first letter/i
-})
+const radioLetter = screen.getByTestId('first-letter-search-radio')
 
 userEvent.click(radioLetter)
 
-userEvent.click(searchButton)
+const btnSearch = screen.getByTestId('exec-search-btn')
+
+userEvent.click(btnSearch)
 
 await waitFor(() => expect(alertMock).toHaveBeenCalled())
 
 await waitFor(() => expect(alertMock).toHaveBeenCalledWith(`Your search must have only 1 (one) character`))
 
+
+await waitFor(() => expect(global.fetch).toHaveBeenCalled())
+
+await waitFor(() => expect(global.fetch)
+.toHaveBeenCalledWith('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=null'))
+
+await waitFor(() => expect(alertMock).toHaveBeenCalled())
+
+await waitFor(() => expect(alertMock).toHaveBeenCalledWith(`Your search must have only 1 (one) character`))
+
+
+await waitFor(() => expect(global.fetch).toHaveBeenCalled())
+
+await waitFor(() => expect(global.fetch)
+.toHaveBeenCalledWith('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=null'))
+
+await waitFor(() => expect(alertMock).toHaveBeenCalled())
+
+await waitFor(() => expect(alertMock).toHaveBeenCalledWith(`Sorry, we haven't found any recipes for these filters.`))
+
+
+
+
 screen.logTestingPlaygroundURL()
 
-global.fetch.mockRestore()
 });
 
 })

@@ -84,6 +84,9 @@ function Recipes() {
 
       </div>
 
+      {returnAPI[`${mealOrDrink}s`] === null
+ && global.alert('Sorry, we haven\'t found any recipes for these filters.') }
+
       {
         (returnAPI && returnAPI[`${mealOrDrink}s`] !== null && doRedirect) // caso tenha apenas 1 receita, redirecionar para a pagina de detalhes dela
         && (

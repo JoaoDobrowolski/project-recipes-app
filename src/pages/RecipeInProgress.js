@@ -20,10 +20,10 @@ function RecipeInProgress() {
   }
   const handleCheck = ({ target }) => {
     ids.push(target.id);
-    const arrayNoHappy = [...new Set(ids)];
-    filterIds = arrayNoHappy;
-    if (ids.toString() !== arrayNoHappy.toString()) {
-      filterIds = arrayNoHappy.filter((el) => el !== target.id);
+    const arrayNoRep = [...new Set(ids)];
+    filterIds = arrayNoRep;
+    if (ids.toString() !== arrayNoRep.toString()) {
+      filterIds = arrayNoRep.filter((el) => el !== target.id);
       ids = filterIds;
     }
     localStorage.setItem('ingredient', JSON.stringify(filterIds));
@@ -34,7 +34,6 @@ function RecipeInProgress() {
   };
 
   useEffect(() => {
-    console.log(renderAux);
   }, [renderAux]);
 
   const handleKeyObj = (str) => { // função feita para lidar com o nome da chave do obj retornado da api

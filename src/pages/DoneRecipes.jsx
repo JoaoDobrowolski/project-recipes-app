@@ -1,33 +1,38 @@
 import React from 'react';
+import CardDoneRecipes from '../componentes/DoneRecipesCards';
 import Header from '../componentes/Header';
-import DoneRecipesCards from '../componentes/DoneRecipesCards';
 
 function DoneRecipes() {
   return (
-    <>
-      <Header page="Done Recipes" search={ false } />
+    <div>
       <section>
+        <Header pageName="Done Recipes" search={ false } />
         <button
           type="button"
+          name="all"
           data-testid="filter-by-all-btn"
         >
           All
         </button>
         <button
           type="button"
+          name="Food"
           data-testid="filter-by-food-btn"
         >
-          Foods
+          Food
         </button>
         <button
           type="button"
+          name="Drinks"
           data-testid="filter-by-drink-btn"
         >
           Drinks
         </button>
       </section>
-      <DoneRecipesCards />
-    </>
+      <section>
+        <CardDoneRecipes />
+      </section>
+    </div>
   );
 }
 

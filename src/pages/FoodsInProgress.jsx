@@ -134,7 +134,8 @@ function FoodsInProgress(props) {
                 id={ i }
                 className="taxado"
                 defaultChecked={ JSON.parse(localStorage
-                  .getItem(`ingredients-${nameRecipeInStorage}`)) ? JSON.parse(localStorage.getItem(`ingredients-${nameRecipeInStorage}`))
+                  .getItem(`ingredients-${nameRecipeInStorage}`)) ? JSON
+                    .parse(localStorage.getItem(`ingredients-${nameRecipeInStorage}`))
                     .includes(i.toString()) : false }
                 onChange={ handleCheck }
               />

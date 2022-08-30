@@ -34,17 +34,7 @@ function Recipes() {
   };
 
   const filterCategory = async (categ) => { // função que escolhe a url correta com a categoria correta para realizar o fetch
-    // setButtonToggle(!buttonToggle);
-
-    // if (buttonToggle) {
-    //   return filterReset();
-    // }
-
     arrCateg.push(categ);
-    // console.log([arrCateg[arrCateg.length - 2], arrCateg[arrCateg.length - 1]]);
-
-    // setSelectCategory((prevState) => ([prevState[1], categ]));
-    // console.log('selectCategory', selectCategory);
 
     if (arrCateg[arrCateg.length - 1] !== arrCateg[arrCateg.length - 2]) {
       if (mealOrDrink === 'meal') {

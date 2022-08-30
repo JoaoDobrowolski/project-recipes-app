@@ -46,7 +46,7 @@ function FoodsInProgress(props) {
   }
 
   const handleCheck = ({ target }) => {
-    console.log(nameRecipeInStorage);
+    // console.log(nameRecipeInStorage);
     ids.push(target.id);
     const arrayNoRep = [...new Set(ids)];
     filterIds = arrayNoRep;
@@ -154,7 +154,6 @@ function FoodsInProgress(props) {
             onClick={ () => history.push('/done-recipes') }
           >
             finish recipe
-
           </button>
         </div>
       )}

@@ -33,6 +33,7 @@ function DoneRecipesCards({ doneRecipes }) {
               src={ recipe.image }
             >
               <img
+                style={ { width: '100px' } } // provisório
                 src={ recipe.image }
                 alt={ recipe.name }
                 className="img"
@@ -70,11 +71,11 @@ function DoneRecipesCards({ doneRecipes }) {
               </div>
               <Link to={ `/${recipe.type}s/${recipe.id}` }>
                 <h3 data-testid={ `${index}-horizontal-name` }>
-                  {recipe.name}
+                  { recipe.name }
                 </h3>
               </Link>
               <p data-testid={ `${index}-horizontal-done-date` }>
-                {`Done in: ${recipe.doneDate}`}
+                { `Done in: ${recipe.doneDate}` }
               </p>
               <ul>
                 {
@@ -84,7 +85,7 @@ function DoneRecipesCards({ doneRecipes }) {
                       key={ indexTag }
                       data-testid={ `${index}-${tag}-horizontal-tag` }
                     >
-                      {tag}
+                      { tag }
                     </li>
                   ))
                 }

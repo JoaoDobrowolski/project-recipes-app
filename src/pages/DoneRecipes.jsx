@@ -7,6 +7,7 @@ function DoneRecipes() {
     <div>
       <section>
         <Header pageName="Done Recipes" search={ false } />
+        <h1 data-testid="page-title">Done Recipes</h1>
         <button
           type="button"
           name="all"

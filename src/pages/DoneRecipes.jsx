@@ -1,40 +1,63 @@
-import React from 'react';
-import CardDoneRecipes from '../componentes/DoneRecipesCards';
+import React, { useState, useEffect } from 'react';
 import Header from '../componentes/Header';
+import DoneRecipesCards from '../componentes/DoneRecipesCards';
 
 function DoneRecipes() {
+  const [recipeFilter, recipeFilterSet] = useState([]);
+
+  const done = () => {
+    if (localStorage.getItem('doneRecipes')) {
+      recipeFilterSet(JSON.parse(localStorage.getItem('doneRecipes')));
+    }
+  };
+
+  useEffect(() => {
+    done();
+  }, []);
+
+  const handleFilterRecipes = ({ target }) => {
+    const { name } = target;
+
+    done();
+
+    if (name !== 'all') {
+      const recRecipes = recipeFilter.filter((item) => item.type === name);
+      recipeFilterSet(recRecipes);
+    }
+  };
+
   return (
     <div>
-      <section>
-        <Header pageName="Done Recipes" search={ false } />
-        <h1 data-testid="page-title">Done Recipes</h1>
+      <h1 data-testid="page-title">Done Recipes</h1>
+      <Header page="Done Recipes" search={ false } />
+      <div>
         <button
           type="button"
-          name="all"
           data-testid="filter-by-all-btn"
+          name="all"
+          onClick={ (e) => handleFilterRecipes(e) }
         >
           All
         </button>
         <button
           type="button"
-          name="Food"
           data-testid="filter-by-food-btn"
+          name="food"
+          onClick={ (e) => handleFilterRecipes(e) }
         >
-          Food
+          Foods
         </button>
         <button
           type="button"
-          name="Drinks"
           data-testid="filter-by-drink-btn"
+          name="drink"
+          onClick={ (e) => handleFilterRecipes(e) }
         >
           Drinks
         </button>
-      </section>
-      <section>
-        <CardDoneRecipes />
-      </section>
+      </div>
+      <DoneRecipesCards doneRecipes={ recipeFilter } />
     </div>
   );
 }
-
 export default DoneRecipes;

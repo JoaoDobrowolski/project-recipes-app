@@ -112,10 +112,10 @@ function Recipes() {
               key={ recipe[handleKeyObj('id')] }
               to={ mealOrDrink === 'meal'
                 ? (
-                  `/foods/${returnAPI[`${mealOrDrink}s`][0][handleKeyObj('id')]}`
+                  `/foods/${recipe[handleKeyObj('id')]}`
                 )
                 : (
-                  `/drinks/${returnAPI[`${mealOrDrink}s`][0][handleKeyObj('id')]}`) }
+                  `/drinks/${recipe[handleKeyObj('id')]}`) }
             >
               <div data-testid={ `${i}-recipe-card` }>
                 <img

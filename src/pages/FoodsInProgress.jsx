@@ -1,25 +1,48 @@
 import React, { useContext, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
+import copy from 'clipboard-copy';
 import RecipeAppContext from '../context/RecipeAppContext';
 
-function FoodsInProgress() {
-  const { mealOrDrink, detailsMeal } = useContext(RecipeAppContext);
+import shareIcon from '../images/shareIcon.svg';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
+
+function FoodsInProgress(props) {
+  const { mealOrDrink } = useContext(RecipeAppContext);
   const history = useHistory();
-  const [renderAux, setRenderAux] = useState();
+  const [renderAux, setRenderAux] = useState(true);
+  const [responseAPI, setResponseAPI] = useState();
+  const [ingredients, setIngredients] = useState();
+  const [copyUrl, setCopyUrl] = useState(false);
+  const [imageFavorite, setImageFavorite] = useState(false);
+  const [idDetail, setIdDetail] = useState('');
 
-  console.log(detailsMeal);
-  console.log(typeof (detailsMeal));
+  const fetchRecipe = async (id) => {
+    const urlMeals = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
+    const response = await fetch(urlMeals);
+    const json = await response.json();
+    setResponseAPI(json.meals);
+    setIngredients(Object.entries(json.meals[0])
+      .filter((el) => (el[1] !== '' && el[1] !== null && el[0]
+        .includes('strIngredient')))
+      .map((ing) => ing[1]));
+  };
 
-  const ingredients = detailsMeal !== '' && Object.entries(detailsMeal[0])
-    .filter((el) => (el[1] !== '' && el[0]
-      .includes('strIngredient')))
-    .map((ing) => ing[1]);
+  useEffect(() => {
+    const { location: { pathname } } = props;
+    const id = (pathname.split(/\D+/)[1]);
+    // console.log(id);
+    setIdDetail(id);
+    fetchRecipe(id);
+  }, []);
 
   let filterIds = [];
   let ids = [];
   if (JSON.parse(localStorage.getItem('ingredient'))) {
     ids = JSON.parse(localStorage.getItem('ingredient'));
   }
+
   const handleCheck = ({ target }) => {
     ids.push(target.id);
     const arrayNoRep = [...new Set(ids)];
@@ -33,6 +56,8 @@ function FoodsInProgress() {
     const local = JSON.parse(localStorage.getItem('ingredient'));
     const result = ingredients.length !== local.length;
     setRenderAux(result);
+    console.log(ingredients.length);
+    console.log(arrayNoRep.length);
   };
 
   useEffect(() => {
@@ -43,52 +68,123 @@ function FoodsInProgress() {
     return keyObj;
   };
 
+  // a partir daqui a lógica é copiada do componente Button.js
+
+  const handleImageFavorite = () => {
+    const storage = JSON.parse(localStorage.getItem('favoriteRecipes') || '[]');
+    // console.log(storage);
+    // console.log(storage.some((ele) => ele.id === id));
+    if (storage.some((ele) => ele.id === idDetail)) {
+      return blackHeartIcon;
+    }
+    return whiteHeartIcon;
+  };
+  const handleCopy = () => {
+    copy(`http://localhost:3000/foods/${idDetail}`);
+    setCopyUrl(true);
+  };
+
+  const handleFavorite = () => {
+    const list = JSON.parse(localStorage.getItem('favoriteRecipes') || '[]');
+    if (!list.some((ele) => ele.id === idDetail)) {
+      if (responseAPI.length >= 1) {
+        const { idMeal, strArea, strCategory, strMeal, strMealThumb } = responseAPI[0];
+        const objtMeal = { id: idMeal,
+          type: 'food',
+          nationality: strArea,
+          category: strCategory,
+          alcoholicOrNot: '',
+          name: strMeal,
+          image: strMealThumb };
+        list.push(objtMeal);
+        window.localStorage.setItem('favoriteRecipes', JSON.stringify(list));
+        setImageFavorite(!imageFavorite);
+      }
+    } else {
+      const ListOfId = list.filter((ele) => ele.id !== idDetail);
+      window.localStorage.setItem('favoriteRecipes', JSON.stringify(ListOfId));
+      setImageFavorite(!imageFavorite);
+    }
+  };
+
   return (
     <div>
-      <img
-        data-testid="recipe-photo"
-        alt="foto"
-        src={ detailsMeal[0][`${handleKeyObj('str')}Thumb`] }
-      />
-      <h1 data-testid="recipe-title">{ detailsMeal[0][handleKeyObj('str')]}</h1>
-      <button data-testid="share-btn" type="button">share</button>
-      <button data-testid="favorite-btn" type="button">favorite</button>
-      <p data-testid="recipe-category">{detailsMeal[0].strCategory}</p>
-      {ingredients.map((ing, i) => (
-
-        <label
-          htmlFor={ i }
-          key={ ing }
-          data-testid={ `${i}-ingredient-step` }
-        >
-          <input
-            type="checkbox"
-            id={ i }
-            className="taxado"
-            defaultChecked={ JSON.parse(localStorage
-              .getItem('ingredient')) ? JSON.parse(localStorage.getItem('ingredient'))
-                .includes(i.toString()) : false }
-            onChange={ handleCheck }
+      {responseAPI && ingredients
+      && (
+        <div>
+          <img
+            data-testid="recipe-photo"
+            alt="foto"
+            src={ responseAPI[0][`${handleKeyObj('str')}Thumb`] }
           />
-          <span>
-            {ing}
-          </span>
-        </label>
+          <h1 data-testid="recipe-title">{ responseAPI[0][handleKeyObj('str')]}</h1>
+          {/* <button data-testid="share-btn" type="button">share</button> */}
+          {/* <button data-testid="favorite-btn" type="button">favorite</button> */}
+          <p data-testid="recipe-category">{responseAPI[0].strCategory}</p>
+          {ingredients.map((ing, i) => (
 
-      ))}
+            <label
+              htmlFor={ i }
+              key={ ing }
+              data-testid={ `${i}-ingredient-step` }
+            >
+              <input
+                type="checkbox"
+                id={ i }
+                className="taxado"
+                defaultChecked={ JSON.parse(localStorage
+                  .getItem('ingredient')) ? JSON.parse(localStorage.getItem('ingredient'))
+                    .includes(i.toString()) : false }
+                onChange={ handleCheck }
+              />
+              <span>
+                {ing}
+              </span>
+            </label>
 
-      <p data-testid="instructions">{ detailsMeal[0].strInstructions }</p>
-      <button
-        data-testid="finish-recipe-btn"
-        type="button"
-        disabled={ renderAux }
-        onClick={ () => history.push('/done-recipes') }
-      >
-        finish recipe
+          ))}
 
-      </button>
+          <p data-testid="instructions">{ responseAPI[0].strInstructions }</p>
+          <button
+            data-testid="finish-recipe-btn"
+            type="button"
+            disabled={ renderAux }
+            onClick={ () => history.push('/done-recipes') }
+          >
+            finish recipe
+
+          </button>
+        </div>
+      )}
+
+      <div>
+        <input
+          type="image"
+          alt="meal icon"
+          src={ shareIcon }
+          data-testid="share-btn"
+          onClick={ handleCopy }
+        />
+        {
+          copyUrl && <p>Link copied!</p>
+        }
+        <input
+          type="image"
+          alt="meal icon"
+          src={ handleImageFavorite() }
+          data-testid="favorite-btn"
+          onClick={ handleFavorite }
+        />
+      </div>
+
     </div>
   );
 }
+
+FoodsInProgress.propTypes = {
+  location: PropTypes.shape({
+    pathname: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 export default FoodsInProgress;

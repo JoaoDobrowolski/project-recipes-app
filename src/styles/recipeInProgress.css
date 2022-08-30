@@ -1,0 +1,3 @@
+.taxado:checked + span {
+  text-decoration: line-through;
+}

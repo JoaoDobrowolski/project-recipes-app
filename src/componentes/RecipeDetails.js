@@ -20,7 +20,7 @@ function RecipeDetails() {
       const response = await fetch(urlMeals);
       const json = await response.json();
       const { meals } = json;
-      console.log(json, 'oioi');
+      // console.log(json, 'oioi');
       setDetailsMeal(meals);
     }
     if (foodOrDrink[1] === 'drinks') {
@@ -28,7 +28,7 @@ function RecipeDetails() {
       const response = await fetch(urlDrinks);
       const json = await response.json();
       const { drinks } = json;
-      console.log(json);
+      // console.log(json);
       setDetailsDrink(drinks);
     }
   };

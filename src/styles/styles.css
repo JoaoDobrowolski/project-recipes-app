@@ -10,22 +10,16 @@ footer {
 }
 
 .recommended_Card {
-  width: 100px;
-  overflow: hidden;
   background-color: yellow;
   margin-bottom: 20px;
-
 }
 
 .recommended {
-
+  background-color: green;
   display: grid;
   grid-template-columns: auto auto;
   height: 100px;
-  width: 117px;
   overflow-y: scroll;
-  background-color: green;
-  
 }
 
 .start_recipe {
@@ -33,7 +27,7 @@ footer {
   /* bottom: 0;
   height: 100px;
   left: 0; */
-  position: fixed;
   bottom: 0;
+  position: fixed;
   width: 100%;
 }

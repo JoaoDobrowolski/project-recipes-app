@@ -17,12 +17,14 @@ function FoodsInProgress(props) {
   const [copyUrl, setCopyUrl] = useState(false);
   const [imageFavorite, setImageFavorite] = useState(false);
   const [idDetail, setIdDetail] = useState('');
+  const [nameRecipeInStorage, setNameRecipeInStorage] = useState('');
 
   const fetchRecipe = async (id) => {
     const urlMeals = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
     const response = await fetch(urlMeals);
     const json = await response.json();
     setResponseAPI(json.meals);
+    setNameRecipeInStorage(json.meals[0].strMeal);
     setIngredients(Object.entries(json.meals[0])
       .filter((el) => (el[1] !== '' && el[1] !== null && el[0]
         .includes('strIngredient')))
@@ -39,11 +41,12 @@ function FoodsInProgress(props) {
 
   let filterIds = [];
   let ids = [];
-  if (JSON.parse(localStorage.getItem('ingredient'))) {
-    ids = JSON.parse(localStorage.getItem('ingredient'));
+  if (JSON.parse(localStorage.getItem(`ingredients-${nameRecipeInStorage}`))) {
+    ids = JSON.parse(localStorage.getItem(`ingredients-${nameRecipeInStorage}`));
   }
 
   const handleCheck = ({ target }) => {
+    console.log(nameRecipeInStorage);
     ids.push(target.id);
     const arrayNoRep = [...new Set(ids)];
     filterIds = arrayNoRep;
@@ -51,13 +54,11 @@ function FoodsInProgress(props) {
       filterIds = arrayNoRep.filter((el) => el !== target.id);
       ids = filterIds;
     }
-    localStorage.setItem('ingredient', JSON.stringify(filterIds));
+    localStorage.setItem(`ingredients-${nameRecipeInStorage}`, JSON.stringify(filterIds));
 
-    const local = JSON.parse(localStorage.getItem('ingredient'));
+    const local = JSON.parse(localStorage.getItem(`ingredients-${nameRecipeInStorage}`));
     const result = ingredients.length !== local.length;
     setRenderAux(result);
-    console.log(ingredients.length);
-    console.log(arrayNoRep.length);
   };
 
   useEffect(() => {
@@ -133,7 +134,7 @@ function FoodsInProgress(props) {
                 id={ i }
                 className="taxado"
                 defaultChecked={ JSON.parse(localStorage
-                  .getItem('ingredient')) ? JSON.parse(localStorage.getItem('ingredient'))
+                  .getItem(`ingredients-${nameRecipeInStorage}`)) ? JSON.parse(localStorage.getItem(`ingredients-${nameRecipeInStorage}`))
                     .includes(i.toString()) : false }
                 onChange={ handleCheck }
               />

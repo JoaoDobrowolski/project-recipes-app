@@ -119,8 +119,6 @@ function FoodsInProgress(props) {
             src={ responseAPI[0][`${handleKeyObj('str')}Thumb`] }
           />
           <h1 data-testid="recipe-title">{ responseAPI[0][handleKeyObj('str')]}</h1>
-          {/* <button data-testid="share-btn" type="button">share</button> */}
-          {/* <button data-testid="favorite-btn" type="button">favorite</button> */}
           <p data-testid="recipe-category">{responseAPI[0].strCategory}</p>
           {ingredients.map((ing, i) => (
 

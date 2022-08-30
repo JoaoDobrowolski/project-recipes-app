@@ -99,13 +99,15 @@ function Button() {
     if (!list.some((ele) => ele.id === id)) {
       if (detailsMeal.length >= 1) {
         const { idMeal, strArea, strCategory, strMeal, strMealThumb } = detailsMeal[0];
-        const objtMeal = { id: idMeal,
+        const objtMeal = {
+          id: idMeal,
           type: 'food',
           nationality: strArea,
           category: strCategory,
           alcoholicOrNot: '',
           name: strMeal,
-          image: strMealThumb };
+          image: strMealThumb,
+        };
         list.push(objtMeal);
         window.localStorage.setItem('favoriteRecipes', JSON.stringify(list));
         setImageFavorite(!imageFavorite);
@@ -113,13 +115,15 @@ function Button() {
       if (detailsDrink.length >= 1) {
         const { idDrink, strCategory, strAlcoholic, strDrink,
           strDrinkThumb } = detailsDrink[0];
-        const objDrink = { id: idDrink,
+        const objDrink = {
+          id: idDrink,
           type: 'drink',
           nationality: '',
           category: strCategory,
           alcoholicOrNot: strAlcoholic,
           name: strDrink,
-          image: strDrinkThumb };
+          image: strDrinkThumb,
+        };
         list.push(objDrink);
         window.localStorage.setItem('favoriteRecipes', JSON.stringify(list));
         setImageFavorite(!imageFavorite);
@@ -132,7 +136,7 @@ function Button() {
     // handleImageFavorite();
   };
 
-  useEffect(() => {}, [imageFavorite]);
+  useEffect(() => { }, [imageFavorite]);
 
   return (
     <div>
@@ -154,18 +158,6 @@ function Button() {
         onClick={ handleFavorite }
       />
       {
-        doneRecipes == null && (
-          <button
-            type="button"
-            data-testid="start-recipe-btn"
-            className="start_recipe"
-            onClick={ handleRedirect }
-          >
-            Start Recipe
-          </button>
-        )
-      }
-      {
         inProgressRecipes !== null && (
           <button
             type="button"
@@ -173,6 +165,18 @@ function Button() {
             className="start_recipe"
           >
             Continue Recipe
+          </button>
+        )
+      }
+      {
+        doneRecipes === null && (
+          <button
+            type="button"
+            data-testid="start-recipe-btn"
+            className="start_recipe"
+            onClick={ handleRedirect }
+          >
+            Start Recipe
           </button>
         )
       }

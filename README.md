@@ -10,7 +10,7 @@ A base de dados serão 2 APIs distintas, uma para comidas e outra para bebidas.
 
 # Habilidades
 
-O projeto foi realizado com o intuito de desenvolver e aperfeiçoar as habilidades do Back-End. Para isto, foram desenvolvidos e utilizados:
+O projeto foi realizado com o intuito de desenvolver e aperfeiçoar as habilidades de Front-End. Para isto, foram desenvolvidos e utilizados:
   - _Redux_ para gerenciar estado;
   - Biblioteca _React-Redux_;
   - Context API do _React_ para gerenciar estado;

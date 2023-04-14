@@ -1,10 +1,10 @@
 # Recipes App
 
-Neste projeto Front-End realizado em grupo foi desenvolvido um app de receitas, utilizando React: Hooks e Context API.
+Neste projeto Front-End realizado em grupo foi desenvolvido um app de receitas, utilizando React Hooks e Context API.
 
-Nele é: ver, buscar, filtrar, favoritar e acompanhar o progresso de preparação de receitas e drinks.
+Nele é possível: ver, buscar, filtrar, favoritar e acompanhar o progresso de preparação de receitas e drinks.
 
-⚠️ A base de dados serão 2 APIs distintas, uma para comidas e outra para bebidas.
+A base de dados serão 2 APIs distintas, uma para comidas e outra para bebidas.
 
 -----
 

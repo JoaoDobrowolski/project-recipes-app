@@ -61,6 +61,9 @@ Etapas a seguir para contribuir com o projeto:
 O projeto Recipes App (App de Receitas) foi desenvolvido por João Felipe Dobrowolski durante o curso da <a href="https://www.betrybe.com/" target="_blank">Trybe</a>, juntamente com os integrantes do grupo:
 
 <a href="https://github.com/raynarastg" target="_blank">Raynara Santiago</a>
+
 <a href="https://github.com/Matheusfull" target="_blank">Matheus Felipe</a>
+
 <a href="https://github.com/rogelins" target="_blank">Rogério Lins</a>
+
 <a href="https://github.com/isabellestrojake" target="_blank">Isabelle Strojake</a>
